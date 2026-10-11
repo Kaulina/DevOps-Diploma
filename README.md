@@ -9,19 +9,19 @@ Terraform и провайдер работают, validate проходит
 
 Управление подсетью выполняется через Terraform. Состояние инфраструктуры синхронизировано, terraform plan подтверждает отсутствие изменений.
 
-[3](screenshots/3.png)
+![3](screenshots/3.png)
 
 VM успешно создана
 
-[4](screenshots/4.png)
+![4](screenshots/4.png)
 
 проверила, что Terraform управляет обоими ресурсами, а так же, проверила что после создания VM Terraform не видит никаких расхождений между .tf-конфигурацией и реально созданными ресурсами.
 
-[5](screenshots/5.png)
+![5](screenshots/5.png)
 
 подняла докер
 
-[6](screenshots/6.png)
+![6](screenshots/6.png)
 
 Docker успешно установлен и запущен на VM.
 
@@ -31,7 +31,7 @@ Docker успешно установлен и запущен на VM.
 - успешно запущен тестовый контейнер `hello-world`;
 - версия Docker: 29.1.3.
 
-[7](screenshots/7.png)
+![7](screenshots/7.png)
 
 Далее, Terraform и Yandex Cloud полностью синхронизировала:
 - VM A — devops-diploma-vm
@@ -44,13 +44,13 @@ Docker успешно установлен и запущен на VM.
 - Terraform не видит drift
 - terraform plan не предлагает изменений
 
-[8](screenshots/8.png)
+![8](screenshots/8.png)
 
 Итоговая проверка инфраструктуры Yandex Cloud: три виртуальные машины в разных зонах доступности, Terraform без расхождений с фактическим состоянием инфраструктуры.
 
 проверила Kubernetes-required sysctl
 
-[9](screenshots/9.png)
+![9](screenshots/9.png)
 
 подтвердила, что:
 - сеть B-A работает
@@ -60,25 +60,25 @@ Docker успешно установлен и запущен на VM.
 - сертификат worker получен
 - VM B присоединилась к кластеру.
 - 
-[10](screenshots/10.png)
+![10](screenshots/10.png)
 
 проверила на ВM A — control plane и готовность worker работать в кластере
 
-[11](screenshots/11.png)
+![11](screenshots/11.png)
 
 настроила так е ВМ D, и проверила что кластер полностью собран. Развернутый Kubernetes-кластер из трёх VM в трёх availability zones работает.
 
-[12](screenshots/12.png)
+![12](screenshots/12.png)
 
 проверила доступ control-plane - kubelet, дальше настроила Flannel, убедилась что он работает на всех трёх узлах
 
-[13](screenshots/13.png)
+![13](screenshots/13.png)
 
 создала временный тестовый под net-test и выполнила тест. 
 убедилась, что работает двустороннюю работу Pod-сети ВМ D-ВM A через Flannel VXLAN.
 
-[14](screenshots/14.png)
+![14](screenshots/14.png)
 
 Pod-сеть Kubernetes работает между всеми тремя узлами
 
-[15](screenshots/15.png)
+![15](screenshots/15.png)
