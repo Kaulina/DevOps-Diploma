@@ -1,0 +1,15 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Local Terraform provider mirror and downloaded archives
+terraform/bootstrap/provider-mirror/
+terraform/bootstrap/terraform-provider-yandex_*.zip
