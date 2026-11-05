@@ -23,10 +23,11 @@
 
 Инфраструктура размещена в Yandex Cloud и состоит из трёх виртуальных машин, расположенных в разных зонах доступности.
 
-| Узел          | Роль                            | Зона доступности |
-| Control Plane | Управление Kubernetes-кластером | ru-central1-a    |
-| Worker B      | Выполнение рабочих нагрузок     | ru-central1-b    |
-| Worker D      | Выполнение рабочих нагрузок     | ru-central1-d    |
+| Узел | Роль | Зона доступности |
+|---|---|---|
+| Control Plane | Управление Kubernetes-кластером | ru-central1-a |
+| Worker B | Выполнение рабочих нагрузок | ru-central1-b |
+| Worker D | Выполнение рабочих нагрузок | ru-central1-d |
 
 Для управления кластером используется kubeadm, контейнерная среда — containerd, сетевой плагин — Flannel.
 
@@ -35,7 +36,6 @@
 Мониторинг построен на Prometheus и Grafana. Blackbox Exporter выполняет HTTP-проверки приложения, а Node Exporter предоставляет метрики операционных систем узлов.
 
 ### Логическая схема
-
 ```mermaid
 flowchart TB
     DEV[Исходный код приложения] --> GH[GitHub]
@@ -392,16 +392,17 @@ flowchart TB
 
 В результате выполнения дипломного проекта создан и проверен облачный стенд, объединяющий инфраструктуру, контейнеризацию, оркестрацию, автоматизацию доставки и мониторинг.
 
-| Направление              | Результат                                                 |
-| Infrastructure as Code   | Создание и управление инфраструктурой с помощью Terraform |
-| Configuration Management | Автоматизация подготовки серверов с помощью Ansible       |
-| Containerization         | Сборка Docker-образа приложения                           |
-| Container Registry       | Публикация образов в Yandex Container Registry            |
-| Orchestration            | Kubernetes-кластер из трёх узлов                          |
-| Networking               | Сетевое взаимодействие Pod через Flannel                  |
-| CI/CD                    | Автоматизированная сборка, публикация и развёртывание приложения |
-| Monitoring               | Сбор метрик Prometheus и визуализация в Grafana           |
-| Application Availability | HTTP-проверки приложения через Blackbox Exporter          |
+| Направление | Результат |
+|---|---|
+| Infrastructure as Code | Создание и управление инфраструктурой с помощью Terraform |
+| Configuration Management | Автоматизация подготовки серверов с помощью Ansible |
+| Containerization | Сборка Docker-образа приложения |
+| Container Registry | Публикация образов в Yandex Container Registry |
+| Orchestration | Kubernetes-кластер из трёх узлов |
+| Networking | Сетевое взаимодействие Pod через Flannel |
+| CI/CD | Автоматизированная сборка, публикация и развёртывание приложения |
+| Monitoring | Сбор метрик Prometheus и визуализация в Grafana |
+| Application Availability | HTTP-проверки приложения через Blackbox Exporter |
 
 ### Ограничения текущей реализации
 
