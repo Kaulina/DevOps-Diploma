@@ -35,39 +35,80 @@
 
 Мониторинг построен на Prometheus и Grafana. Blackbox Exporter выполняет HTTP-проверки приложения, а Node Exporter предоставляет метрики операционных систем узлов.
 
-### Логическая схема
+### Архитектура
+
 ```mermaid
 flowchart TB
-    DEV[Исходный код приложения] --> GH[GitHub]
-    GH --> GA[GitHub Actions]
-    GA --> BUILD[Docker build]
-    BUILD --> REG[Yandex Container Registry]
-    REG --> K8S[Kubernetes]
 
-    subgraph YC[Yandex Cloud]
-        subgraph CLUSTER[Kubernetes cluster]
-            CP[Control Plane]
-            WB[Worker B]
-            WD[Worker D]
-            APP[Application Pods x2]
-            CP --> WB
-            CP --> WD
-            WB --> APP
-            WD --> APP
-        end
+    subgraph INFRA["1. Создание и подготовка инфраструктуры"]
+        direction TB
+        TF["Terraform<br/>Infrastructure as Code"]
+        YC["Yandex Cloud<br/>3 виртуальные машины<br/>Сеть и Security Groups"]
+        ANS["Ansible<br/>Подготовка серверов"]
+        KUBE["kubeadm<br/>Развёртывание Kubernetes"]
 
-        subgraph MON[Monitoring]
-            NE[Node Exporter]
-            PROM[Prometheus]
-            BB[Blackbox Exporter]
-            GRAF[Grafana]
-            NE --> PROM
-            BB --> PROM
-            PROM --> GRAF
-        end
+        TF --> YC --> ANS --> KUBE
     end
 
-    K8S --> APP
+    subgraph DELIVERY["2. Сборка и доставка приложения"]
+        direction LR
+        REPO["GitHub<br/>devops-diploma-app"]
+        ACTIONS["GitHub Actions<br/>CI/CD Pipeline"]
+        DOCKER["Docker<br/>Сборка образа"]
+        REGISTRY["Yandex Container Registry<br/>Хранение образов"]
+
+        REPO --> ACTIONS --> DOCKER --> REGISTRY
+    end
+
+    subgraph CLUSTER["3. Kubernetes-кластер в Yandex Cloud"]
+        direction TB
+        CP["Control Plane<br/>Управление кластером"]
+        WB["Worker B"]
+        WD["Worker D"]
+
+        CP --- WB
+        CP --- WD
+
+        subgraph APP["Развёрнутое приложение"]
+            direction TB
+            PODS["Application Pods<br/>2 реплики"]
+            SERVICE["Kubernetes Service<br/>NodePort :31811"]
+            PODS --> SERVICE
+        end
+
+        WB --- PODS
+        WD --- PODS
+    end
+
+    subgraph MONITORING["4. Мониторинг и контроль работоспособности"]
+        direction TB
+        NODE["Node Exporter<br/>Метрики узлов"]
+        BLACKBOX["Blackbox Exporter<br/>HTTP-проверки приложения"]
+        PROM["Prometheus<br/>Сбор и хранение метрик"]
+        GRAFANA["Grafana<br/>Дашборд мониторинга"]
+
+        NODE --> PROM
+        BLACKBOX --> PROM
+        PROM --> GRAFANA
+    end
+
+    KUBE --> CP
+    REGISTRY -->|"Получение Docker-образа"| PODS
+    SERVICE -.->|"Проверка доступности"| BLACKBOX
+
+    WB -.-> NODE
+    WD -.-> NODE
+    CP -.-> NODE
+
+    classDef infra fill:#dbeafe,stroke:#2563eb,color:#1e3a8a,stroke-width:1.5px
+    classDef delivery fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:1.5px
+    classDef cluster fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:1.5px
+    classDef monitoring fill:#f3e8ff,stroke:#9333ea,color:#581c87,stroke-width:1.5px
+
+    class TF,YC,ANS,KUBE infra
+    class REPO,ACTIONS,DOCKER,REGISTRY delivery
+    class CP,WB,WD,PODS,SERVICE cluster
+    class NODE,BLACKBOX,PROM,GRAFANA monitoring
 ```
 
 ## 3. Создание облачной инфраструктуры — Terraform
